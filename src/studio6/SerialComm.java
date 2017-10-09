@@ -1,5 +1,6 @@
 package studio6;
 
+
 import jssc.*;
 
 public class SerialComm {
@@ -27,10 +28,65 @@ public class SerialComm {
 	}
 		
 	// TODO: Add writeByte() method from Studio 5
+	public void writeByte(byte singlebyte) {
+		if (debug == true){
+			System.out.println( "<0x" + Integer.toHexString(singlebyte)+">");
+		}
+		     
+			try {
+				port.writeByte(singlebyte);
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		
+	}
 	
 	// TODO: Add available() method
-	
+	boolean available() {
+		
+		try {
+			if (port.getInputBufferBytesCount() != -1){
+				return true;
+			}
+			
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	// TODO: Add readByte() method	
 	
+	byte[] readByte() {
+		byte[] var = new byte[1];
+		try {
+			var = port.readBytes(1);
+			return var;
+		} catch (SerialPortException e) {
+			e.printStackTrace();
+		}
+		return var;
+		
+	}
+	
 	// TODO: Add a main() method
+	static void main(){
+		try {
+			SerialComm sc = new SerialComm("/dev/cu.usbserial-DN02AZB7");
+			while (true) {
+				boolean available = sc.available();
+				if (available == true) {
+					System.out.println(sc.readByte());
+				}
+				
+				
+			}
+		} catch (SerialPortException e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
 }
